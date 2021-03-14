@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Keyboard</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: rgb(28, 28, 30);
+        color: rgba(255, 255, 255, 0.87);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        width: 100%;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .keyboard {
+        display: flex;
+        flex-flow: column nowrap;
+      }
+
+      .row {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        margin: 5px 0;
+      }
+
+      .row:nth-of-type(2) {
+        margin-left: 16px;
+      }
+
+      .row:nth-of-type(3) {
+        margin-left: 48px;
+      }
+
+      .key {
+        text-transform: uppercase;
+        margin: 0 5px;
+        height: 48px;
+        width: 48px;
+        border-radius: 5px;
+        border: 1px solid rgb(58, 58, 60);
+        text-align: center;
+        line-height: 48px;
+        transition: background-color 0.05s ease-in-out;
+        cursor: default;
+        font-size: 18px;
+        user-select: none;
+      }
+
+      .active {
+        background-color: rgb(58, 58, 60);
+      }
+
+      .score {
+        position: absolute;
+        top: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 24px;
+        transition: color 0.05s ease-in-out;
+      }
+
+      .good {
+        background-color: rgb(48, 209, 88);
+      }
+
+      .good--text {
+        color: rgb(48, 209, 88);
+      }
+
+      .bad {
+        background-color: rgb(255, 69, 58);
+      }
+
+      .bad--text {
+        color: rgb(255, 69, 58);
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: translateX(-50%) scale(1);
+        }
+
+        50% {
+          transform: translateX(-50%) scale(1.1);
+        }
+      }
+
+      .help {
+        position: absolute;
+        top: 150px;
+        left: 50%;
+        font-size: 34px;
+        animation: pulse 1s ease-in-out infinite;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translate(-50%, 25px);
+          opacity: 0;
+        }
+
+        to {
+          transform: translate(-50%, 0);
+          opacity: 1;
+        }
+      }
+
+      .controls {
+        position: absolute;
+        bottom: 200px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: slideIn 0.5s ease-in-out forwards;
+      }
+
+      .controls p {
+        font-size: 16px;
+      }
+
+      .controlsKey {
+        color: rgba(255, 255, 255, 0.87);
+        background-color: transparent;
+        border: 2px solid rgb(58, 58, 60);
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 14px;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .controlsKey--big {
+        color: rgba(255, 255, 255, 0.87);
+        background-color: transparent;
+        border: 2px solid rgb(58, 58, 60);
+        padding: 0px 14px;
+        border-radius: 5px;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .summary {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        width: 100%;
+        background-color: rgb(28, 28, 30);
+        z-index: 999;
+      }
+
+      .summary div {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        justify-content: flex-start;
+        height: 40vh;
+        width: 25%;
+      }
+
+      .summary div:nth-of-type(1) {
+        padding-right: 50px;
+        border-right: 2px solid rgb(58, 58, 60);
+      }
+
+      .summary div:nth-of-type(2) {
+        padding-left: 48px;
+      }
+
+      .summary div p:first-of-type {
+        margin-top: 50px;
+      }
+
+      .summary div p {
+        font-size: 24px;
+        width: 100%;
+      }
+
+      .summary div p span:nth-of-type(1) {
+        float: left;
+      }
+
+      .summary div p span:nth-of-type(2) {
+        float: right;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .options {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        display: flex;
+        flex-flow: row nowrap;
+      }
+
+      .options__volume {
+        background-color: rgb(44, 44, 46);
+        border-radius: 50%;
+        padding: 8px;
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0.16);
+        border: none;
+        cursor: pointer;
+        outline: none;
+        transition: background-color 0.15s ease-in-out;
+      }
+
+      .muted {
+        background-color: rgb(255, 69, 58);
+      }
+
+      .difficultyLevel {
+        position: absolute;
+        top: 250px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        border-radius: 8px;
+        background-color: rgb(44, 44, 46);
+        overflow: hidden;
+      }
+
+      .difficultyLevel__btn {
+        border: none;
+        color: rgba(255, 255, 255, 0.87);
+        font-family: "Poppins", sans-serif;
+        font-size: 18px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 4px 8px;
+        border-radius: 8px;
+        background-color: rgb(44, 44, 46);
+        width: 89px;
+        outline: none;
+        cursor: pointer;
+        transition: transform 0.6s ease-in-out;
+      }
+
+      #difficultyLevel__easy {
+        color: rgb(48, 209, 88);
+      }
+
+      #difficultyLevel__medium {
+        color: rgb(255, 159, 10);
+      }
+
+      #difficultyLevel__hard {
+        color: rgb(255, 69, 58);
+      }
+
+      .difficultyIndicator {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 89px;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.13);
+        transition: transform 0.6s ease-in-out, background-color 0.6s ease-in-out;
+      }
+
+      .difficultyIndicator--easy {
+        transform: translateX(0);
+      }
+
+      .difficultyIndicator--medium {
+        transform: translateX(89px);
+      }
+
+      .difficultyIndicator--hard {
+        transform: translateX(178px);
+      }
+
+      @keyframes fadeOut {
+        0% {
+          opacity: 1;
+          transform: scale(1);
+        }
+
+        100% {
+          opacity: 0;
+          transform: scale(0);
+        }
+      }
+
+      .fadeOut {
+        animation: fadeOut 0.6s forwards;
+      }
+
+      @media screen and (max-width: 1200px) {
+        .help {
+          top: 10%;
+        }
+
+        .difficultyLevel {
+          top: 25%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <p class="score hidden">
+      <span>Score: <span id="score">0</span></span>
+      <br />
+      <span>Streak: <span id="streak">0</span></span>
+    </p>
+    <p id="help" class="help"></p>
+    <div id="difficultyLevel" class="difficultyLevel">
+      <span class="difficultyIndicator" id="difficultyIndicator"></span>
+      <button type="button" class="difficultyLevel__btn" id="difficultyLevel__easy">easy</button>
+      <button type="button" class="difficultyLevel__btn" id="difficultyLevel__medium">medium</button>
+      <button type="button" class="difficultyLevel__btn" id="difficultyLevel__hard">hard</button>
+    </div>
+    <div id="options" class="options">
+      <button type="button" id="mute" class="row options__volume">
+        <img src="icons/volume_off-white-24dp.svg" alt="mute" />
+      </button>
+    </div>
+    <div id="keyboard" class="keyboard"></div>
+    <div id="summary" class="summary hidden"></div>
+
+    <script>
+      const KEYBOARD = "qwertyuiop asdfghjkl zxcvbnm";
+
+      const keyboard = document.querySelector("#keyboard");
+      const help = document.querySelector("#help");
+      const scoreEl = document.querySelector("#score");
+      const streakEl = document.querySelector("#streak");
+      const summary = document.querySelector("#summary");
+      const mute = document.querySelector("#mute");
+      const diffLvlEasy = document.querySelector("#difficultyLevel__easy");
+      const diffLvlMedium = document.querySelector("#difficultyLevel__medium");
+      const diffLvlHard = document.querySelector("#difficultyLevel__hard");
+      const diffIndicator = document.querySelector("#difficultyIndicator");
+      const diffLvlEl = document.querySelector("#difficultyLevel");
+
+      const controls = document.createElement("div");
+      controls.classList.add("controls");
+      controls.innerHTML = "<p>Press <span class='controlsKey'>space</span> to stop.</p>";
+
+      let totalActives = 0;
+      let score = 0;
+      let prevScore = 0;
+      let streak = 0;
+      let bestStreak = 0;
+      let trials = 0;
+      let missed = 0;
+      let hitted = 0;
+      let highscore = window.localStorage.getItem("highscore") || 0;
+      let highestBestStreak = window.localStorage.getItem("beststreak") || 0;
+      let startTimer;
+      let endTimer;
+      let isMute = window.localStorage.getItem("isMute") == "true" || false;
+      if (isMute) mute.classList.add("muted");
+      else mute.classList.remove("muted");
+      let difficultyLevel = window.localStorage.getItem("difficulty") || "medium";
+      diffIndicator.className = `difficultyIndicator difficultyIndicator--${difficultyLevel}`;
+
+      function changeDifficulty(level) {
+        difficultyLevel = level;
+        window.localStorage.setItem("difficulty", level);
+        diffIndicator.className = `difficultyIndicator difficultyIndicator--${level}`;
+      }
+      diffLvlEasy.addEventListener("click", () => changeDifficulty("easy"));
+      diffLvlMedium.addEventListener("click", () => changeDifficulty("medium"));
+      diffLvlHard.addEventListener("click", () => changeDifficulty("hard"));
+
+      function handleToggleMute() {
+        isMute = !isMute;
+        window.localStorage.setItem("isMute", isMute);
+        if (isMute) mute.classList.add("muted");
+        else mute.classList.remove("muted");
+      }
+      mute.addEventListener("click", handleToggleMute);
+
+      function playSound() {
+        if (!isMute) {
+          const audio = new Audio(`sounds/sound${Math.floor(Math.random() * 5) + 1}.mp3`);
+          audio.play();
+        }
+      }
+
+      function msToTime(duration) {
+        var seconds = Math.floor((duration / 1000) % 60),
+          minutes = Math.floor((duration / (1000 * 60)) % 60),
+          hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        return `${hours > 0 ? `${hours}:` : ""}${minutes}:${seconds}`;
+      }
+
+      function updateScore() {
+        if (prevScore < score) {
+          scoreEl.classList.add("good--text");
+        } else if (prevScore > score) {
+          scoreEl.classList.add("bad--text");
+        }
+
+        scoreEl.textContent = score;
+        streakEl.textContent = streak;
+
+        prevScore = score;
+
+        setTimeout(() => {
+          scoreEl.classList.remove("good--text");
+          scoreEl.classList.remove("bad--text");
+        }, 100);
+
+        if (score > highscore) {
+          highscore = score;
+          window.localStorage.setItem("highscore", highscore);
+        }
+
+        if (bestStreak > highestBestStreak) {
+          highestBestStreak = bestStreak;
+          window.localStorage.setItem("beststreak", highestBestStreak);
+        }
+      }
+
+      function start() {
+        startTimer = new Date().getTime();
+        const keys = document.querySelectorAll(".key");
+
+        let interval;
+        if (difficultyLevel === "easy") interval = 1000;
+        else if (difficultyLevel === "medium") interval = 500;
+        else if (difficultyLevel === "hard") interval = 250;
+
+        let tick = 0;
+
+        const game = setInterval(() => {
+          if (totalActives >= 5) {
+            tick++;
+
+            if (difficultyLevel === "easy") {
+              score--;
+            } else if (difficultyLevel === "medium") {
+              if (tick === 2) {
+                score--;
+                tick = 0;
+              }
+            } else if (difficultyLevel === "hard") {
+              if (tick === 3) {
+                score--;
+                tick = 0;
+              }
+            }
+
+            updateScore();
+            return;
+          }
+
+          let rng = Math.floor(Math.random() * keys.length);
+
+          let i = 0;
+          while (keys[rng].classList.contains("active")) {
+            rng = Math.floor(Math.random() * keys.length);
+            i++;
+            if (i >= keys.length) break;
+          }
+
+          keys[rng].classList.add("active");
+          totalActives++;
+        }, interval);
+
+        const handleKeyPress = (e) => {
+          playSound();
+
+          if (KEYBOARD.replace(" ", "").replace(" ", "").includes(e.key)) {
+            const target = document.querySelector(`#key_${e.key}`);
+            trials++;
+
+            if (target.classList.contains("active")) {
+              score++;
+              streak++;
+              hitted++;
+              totalActives--;
+              if (bestStreak < streak) bestStreak = streak;
+              target.classList.add("good");
+            } else {
+              score--;
+              missed++;
+              streak = 0;
+              target.classList.add("bad");
+              target.classList.add("active");
+            }
+
+            setTimeout(() => {
+              target.classList.remove("good");
+              target.classList.remove("bad");
+              target.classList.remove("active");
+            }, 100);
+
+            updateScore();
+          } else if (e.key === " ") {
+            endTimer = new Date().getTime();
+
+            document.removeEventListener("keypress", handleKeyPress);
+            clearInterval(game);
+
+            let accuracy = (hitted / trials) * 100;
+            if (trials <= 0) accuracy = 0;
+            accuracy = accuracy.toFixed(2);
+
+            const timeDiff = endTimer - startTimer;
+
+            summary.innerHTML = `
+<div>
+    <p><span>Score:</span><span>${score}</span></p>
+    <p><span>Best streak:</span><span>${bestStreak}</span></p>
+    <p><span>Accuracy:</span><span>${accuracy}%</span></p>
+    <p><span>Time:</span><span>${msToTime(timeDiff)}</span></p>
+</div>
+<div>
+    <p><span>Score:</span><span>${highscore}${score === highscore ? " - NEW BEST!" : ""}</span></p>
+    <p><span>Best streak:</span><span>${highestBestStreak}${bestStreak === highestBestStreak ? " - NEW BEST!" : ""}</span></p>
+</div>
+
+      `;
+            summary.classList.remove("hidden");
+          }
+        };
+
+        document.addEventListener("keypress", handleKeyPress);
+      }
+
+      function fadeOut(el) {
+        el.classList.add("fadeOut");
+      }
+
+      function displayHelp() {
+        help.innerHTML = "Press <span class='controlsKey--big'>F</span> and <span class='controlsKey--big'>J</span> to start";
+        const fKey = document.querySelector("#key_f");
+        const jKey = document.querySelector("#key_j");
+        fKey.classList.add("active");
+        jKey.classList.add("active");
+
+        let isFKey = true;
+        let isJKey = true;
+
+        const handlePress = (e) => {
+          if (e.key === "f") {
+            playSound();
+            fKey.classList.add("good");
+            isFKey = false;
+
+            setTimeout(() => {
+              fKey.classList.remove("good");
+              fKey.classList.remove("active");
+            }, 100);
+          } else if (e.key === "j") {
+            playSound();
+            jKey.classList.add("good");
+            isJKey = false;
+
+            setTimeout(() => {
+              jKey.classList.remove("good");
+              jKey.classList.remove("active");
+            }, 100);
+          }
+
+          if (!isFKey && isJKey) {
+            help.innerHTML = "Press <span class='controlsKey--big'>J</span> to start";
+          } else if (isFKey && !isJKey) {
+            help.innerHTML = "Press <span class='controlsKey--big'>F</span> to start";
+          }
+
+          if (!isFKey && !isJKey) {
+            document.removeEventListener("keypress", handlePress);
+            document.body.appendChild(controls);
+            document.querySelector(".score").classList.remove("hidden");
+
+            if (difficultyLevel !== "easy") fadeOut(diffLvlEasy);
+            if (difficultyLevel !== "medium") fadeOut(diffLvlMedium);
+            if (difficultyLevel !== "hard") fadeOut(diffLvlHard);
+            document.querySelector(`#difficultyLevel__${difficultyLevel}`).style.cursor = "default";
+            document.querySelector(`#difficultyLevel__${difficultyLevel}`).style.borderRadius = "8px";
+            diffLvlEl.style.backgroundColor = "transparent";
+            diffIndicator.style.backgroundColor = "transparent";
+            if (difficultyLevel === "easy") {
+              diffLvlEasy.style.transform = "translateX(89px)";
+            } else if (difficultyLevel === "hard") {
+              diffLvlHard.style.transform = "translateX(-89px)";
+            }
+            diffIndicator.style.transform = "translateX(89px)";
+
+            help.textContent = "3";
+
+            setTimeout(() => {
+              help.textContent = "2";
+
+              setTimeout(() => {
+                help.textContent = "1";
+
+                setTimeout(() => {
+                  help.textContent = "GO!";
+
+                  setTimeout(() => {
+                    help.textContent = "";
+                    start();
+                  }, 500);
+                }, 1000);
+              }, 1000);
+            }, 1000);
+          }
+        };
+
+        document.addEventListener("keypress", handlePress);
+      }
+
+      function init() {
+        KEYBOARD.split(" ").forEach((row) => {
+          const el = document.createElement("div");
+          el.classList.add("row");
+
+          row.split("").forEach((letter) => {
+            const key = document.createElement("span");
+            key.classList.add("key");
+            key.setAttribute("id", `key_${letter}`);
+            key.textContent = letter;
+
+            el.appendChild(key);
+          });
+
+          keyboard.appendChild(el);
+        });
+
+        displayHelp();
+      }
+      init();
+    </script>
+  </body>
+</html>
