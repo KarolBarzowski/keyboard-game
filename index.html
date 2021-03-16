@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Keyboard</title>
     <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet" />
     <style>
       * {
         margin: 0;
@@ -18,6 +18,7 @@
         background-color: rgb(28, 28, 30);
         color: rgba(255, 255, 255, 0.87);
         display: flex;
+        flex-flow: column nowrap;
         align-items: center;
         justify-content: center;
         height: 100vh;
@@ -100,12 +101,29 @@
         }
       }
 
+      @keyframes pulse--multiplayer {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+
+        50% {
+          transform: scale(1.1);
+        }
+      }
+
       .help {
         position: absolute;
         top: 150px;
         left: 50%;
         font-size: 34px;
         animation: pulse 1s ease-in-out infinite;
+      }
+
+      .help--multiplayer {
+        margin-bottom: 100px;
+        font-size: 34px;
+        animation: pulse--multiplayer 1s ease-in-out infinite;
       }
 
       @keyframes slideIn {
@@ -122,7 +140,7 @@
 
       .controls {
         position: absolute;
-        bottom: 200px;
+        bottom: 300px;
         left: 50%;
         transform: translateX(-50%);
         animation: slideIn 0.5s ease-in-out forwards;
@@ -136,7 +154,7 @@
         color: rgba(255, 255, 255, 0.87);
         background-color: transparent;
         border: 2px solid rgb(58, 58, 60);
-        padding: 4px 8px;
+        padding: 2px 6px;
         border-radius: 5px;
         font-size: 14px;
         text-align: center;
@@ -153,7 +171,8 @@
         text-transform: uppercase;
       }
 
-      .summary {
+      .summary,
+      .multiplayer {
         position: absolute;
         top: 0;
         left: 0;
@@ -239,7 +258,6 @@
         align-items: center;
         border-radius: 8px;
         background-color: rgb(44, 44, 46);
-        overflow: hidden;
       }
 
       .difficultyLevel__btn {
@@ -277,11 +295,12 @@
         width: 89px;
         height: 100%;
         background-color: rgba(255, 255, 255, 0.13);
-        transition: transform 0.6s ease-in-out, background-color 0.6s ease-in-out;
+        transition: transform 0.6s ease-in-out, background-color 0.6s ease-in-out, border-radius 0.6s ease-in-out;
       }
 
       .difficultyIndicator--easy {
         transform: translateX(0);
+        border-radius: 8px 0 0 8px;
       }
 
       .difficultyIndicator--medium {
@@ -290,6 +309,7 @@
 
       .difficultyIndicator--hard {
         transform: translateX(178px);
+        border-radius: 0 8px 8px 0;
       }
 
       @keyframes fadeOut {
@@ -308,6 +328,117 @@
         animation: fadeOut 0.6s forwards;
       }
 
+      .relative {
+        position: relative;
+        transition: transform 0.6s ease-in-out;
+      }
+
+      .tipKey {
+        position: absolute;
+        top: calc(100% + 5px);
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .multiplayerInvite {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        margin-top: 50px;
+      }
+
+      .multiplayerInvite h1 {
+        font-size: 34px;
+        font-weight: 500;
+      }
+
+      .multiplayerCodeInput {
+        margin-top: 15px;
+        border: 2px solid rgb(44, 44, 46);
+        background-color: rgb(44, 44, 46);
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-size: 18px;
+        font-family: "Poppins", sans-serif;
+        color: rgba(255, 255, 255, 0.87);
+        outline: none;
+      }
+
+      .multiplayerCodeInput::placeholder {
+        font-size: 18px;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .multiplayerCodeInput:hover,
+      .multiplayerCodeInput:focus {
+        border: 2px solid rgb(58, 58, 60);
+      }
+
+      .multiplayerJoinBtn {
+        position: absolute;
+        top: 15px;
+        right: 0;
+        height: 51px;
+        width: 51px;
+        border: none;
+        background-color: rgb(44, 44, 46);
+        border-radius: 8px;
+        outline: none;
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+        opacity: 1;
+        transform: translateX(calc(100% + 5px));
+        visibility: visible;
+      }
+
+      .multiplayerJoinBtn:hover:not(:disabled),
+      .multiplayerJoinBtn:focus:not(:disabled) {
+        background-color: rgb(58, 58, 60);
+        cursor: pointer;
+      }
+
+      .multiplayerJoinBtn--hide {
+        opacity: 0;
+        transform: translateX(0);
+        visibility: hidden;
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, visibility 0s linear 0.3s;
+      }
+
+      .secondary {
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      @keyframes error {
+        0%,
+        50%,
+        100% {
+          transform: translateX(calc(100% + 10px));
+        }
+
+        25%,
+        75% {
+          transform: translateX(calc(100%));
+        }
+      }
+
+      .error {
+        background-color: rgb(255, 69, 58) !important;
+        animation: error 0.6s ease-in-out forwards;
+      }
+
+      @keyframes slideInRight {
+        from {
+          transform: translateX(-100%);
+        }
+
+        to {
+          transform: translateX(0);
+        }
+      }
+
+      .slideInRight {
+        animation: slideInRight 0.6s ease-in-out 0.05s forwards;
+      }
+
       @media screen and (max-width: 1200px) {
         .help {
           top: 10%;
@@ -316,6 +447,51 @@
         .difficultyLevel {
           top: 25%;
         }
+      }
+
+      .multiplayer {
+        flex-flow: column nowrap;
+        align-items: space-between;
+      }
+
+      .multiplayer__scoreboard {
+        width: 100%;
+        height: 15%;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+      }
+
+      .multiplayer__scoreboard > div {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        justify-content: center;
+        width: 50%;
+        height: 100%;
+      }
+
+      .multiplayer__scoreboard > div:nth-of-type(1) {
+        border-right: 4px solid rgb(58, 58, 60);
+      }
+
+      .multiplayer__screens {
+        height: 85%;
+        width: 100%;
+        display: flex;
+        flex-flow: row wrap;
+      }
+
+      .multiplayer__screens > div {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        justify-content: center;
+        width: 50%;
+      }
+
+      .multiplayer__screens > div:nth-of-type(1) {
+        border-right: 4px solid rgb(58, 58, 60);
       }
     </style>
   </head>
@@ -327,331 +503,50 @@
     </p>
     <p id="help" class="help"></p>
     <div id="difficultyLevel" class="difficultyLevel">
+      <div class="relative">
+        <button type="button" class="difficultyLevel__btn" id="difficultyLevel__easy">easy</button>
+        <span class="controlsKey tipKey">1</span>
+      </div>
+      <div class="relative">
+        <button type="button" class="difficultyLevel__btn" id="difficultyLevel__medium">medium</button>
+        <span class="controlsKey tipKey">2</span>
+      </div>
+      <div class="relative">
+        <button type="button" class="difficultyLevel__btn" id="difficultyLevel__hard">hard</button>
+        <span class="controlsKey tipKey">3</span>
+      </div>
       <span class="difficultyIndicator" id="difficultyIndicator"></span>
-      <button type="button" class="difficultyLevel__btn" id="difficultyLevel__easy">easy</button>
-      <button type="button" class="difficultyLevel__btn" id="difficultyLevel__medium">medium</button>
-      <button type="button" class="difficultyLevel__btn" id="difficultyLevel__hard">hard</button>
     </div>
     <div id="options" class="options">
-      <button type="button" id="mute" class="row options__volume">
-        <img src="icons/volume_off-white-24dp.svg" alt="mute" />
-      </button>
+      <div class="relative">
+        <button type="button" id="mute" class="row options__volume">
+          <img src="icons/volume_off-white-24dp.svg" alt="mute" />
+        </button>
+        <span class="controlsKey tipKey">m</span>
+      </div>
     </div>
     <div id="keyboard" class="keyboard"></div>
+    <!-- <div class="multiplayerInvite" id="multiplayerInvite">
+      <h1>Play with your friend!</h1>
+      <p class="secondary">To create game - type here anything, and send it to your friend.</p>
+      <p class="secondary">To join game - type here code from your friend.</p>
+      <div class="relative">
+        <input type="text" placeholder="Invitation code" class="multiplayerCodeInput" id="multiplayerCodeInput" />
+        <button type="button" class="multiplayerJoinBtn multiplayerJoinBtn--hide" id="multiplayerJoinBtn">
+          <img src="icons/arrow_forward-white-24dp.svg" alt="join" />
+        </button>
+      </div>
+    </div> -->
     <div id="summary" class="summary hidden"></div>
-
-    <script>
-      const KEYBOARD = "qwertyuiop asdfghjkl zxcvbnm";
-
-      const keyboard = document.querySelector("#keyboard");
-      const help = document.querySelector("#help");
-      const scoreEl = document.querySelector("#score");
-      const streakEl = document.querySelector("#streak");
-      const summary = document.querySelector("#summary");
-      const mute = document.querySelector("#mute");
-      const diffLvlEasy = document.querySelector("#difficultyLevel__easy");
-      const diffLvlMedium = document.querySelector("#difficultyLevel__medium");
-      const diffLvlHard = document.querySelector("#difficultyLevel__hard");
-      const diffIndicator = document.querySelector("#difficultyIndicator");
-      const diffLvlEl = document.querySelector("#difficultyLevel");
-
-      const controls = document.createElement("div");
-      controls.classList.add("controls");
-      controls.innerHTML = "<p>Press <span class='controlsKey'>space</span> to stop.</p>";
-
-      let totalActives = 0;
-      let score = 0;
-      let prevScore = 0;
-      let streak = 0;
-      let bestStreak = 0;
-      let trials = 0;
-      let missed = 0;
-      let hitted = 0;
-      let highscore = window.localStorage.getItem("highscore") || 0;
-      let highestBestStreak = window.localStorage.getItem("beststreak") || 0;
-      let startTimer;
-      let endTimer;
-      let isMute = window.localStorage.getItem("isMute") == "true" || false;
-      if (isMute) mute.classList.add("muted");
-      else mute.classList.remove("muted");
-      let difficultyLevel = window.localStorage.getItem("difficulty") || "medium";
-      diffIndicator.className = `difficultyIndicator difficultyIndicator--${difficultyLevel}`;
-
-      function changeDifficulty(level) {
-        difficultyLevel = level;
-        window.localStorage.setItem("difficulty", level);
-        diffIndicator.className = `difficultyIndicator difficultyIndicator--${level}`;
-      }
-      diffLvlEasy.addEventListener("click", () => changeDifficulty("easy"));
-      diffLvlMedium.addEventListener("click", () => changeDifficulty("medium"));
-      diffLvlHard.addEventListener("click", () => changeDifficulty("hard"));
-
-      function handleToggleMute() {
-        isMute = !isMute;
-        window.localStorage.setItem("isMute", isMute);
-        if (isMute) mute.classList.add("muted");
-        else mute.classList.remove("muted");
-      }
-      mute.addEventListener("click", handleToggleMute);
-
-      function playSound() {
-        if (!isMute) {
-          const audio = new Audio(`sounds/sound${Math.floor(Math.random() * 5) + 1}.mp3`);
-          audio.play();
-        }
-      }
-
-      function msToTime(duration) {
-        var seconds = Math.floor((duration / 1000) % 60),
-          minutes = Math.floor((duration / (1000 * 60)) % 60),
-          hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
-
-        hours = hours < 10 ? "0" + hours : hours;
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        return `${hours > 0 ? `${hours}:` : ""}${minutes}:${seconds}`;
-      }
-
-      function updateScore() {
-        if (prevScore < score) {
-          scoreEl.classList.add("good--text");
-        } else if (prevScore > score) {
-          scoreEl.classList.add("bad--text");
-        }
-
-        scoreEl.textContent = score;
-        streakEl.textContent = streak;
-
-        prevScore = score;
-
-        setTimeout(() => {
-          scoreEl.classList.remove("good--text");
-          scoreEl.classList.remove("bad--text");
-        }, 100);
-
-        if (score > highscore) {
-          highscore = score;
-          window.localStorage.setItem("highscore", highscore);
-        }
-
-        if (bestStreak > highestBestStreak) {
-          highestBestStreak = bestStreak;
-          window.localStorage.setItem("beststreak", highestBestStreak);
-        }
-      }
-
-      function start() {
-        startTimer = new Date().getTime();
-        const keys = document.querySelectorAll(".key");
-
-        let interval;
-        if (difficultyLevel === "easy") interval = 1000;
-        else if (difficultyLevel === "medium") interval = 500;
-        else if (difficultyLevel === "hard") interval = 250;
-
-        let tick = 0;
-
-        const game = setInterval(() => {
-          if (totalActives >= 5) {
-            tick++;
-
-            if (difficultyLevel === "easy") {
-              score--;
-            } else if (difficultyLevel === "medium") {
-              if (tick === 2) {
-                score--;
-                tick = 0;
-              }
-            } else if (difficultyLevel === "hard") {
-              if (tick === 3) {
-                score--;
-                tick = 0;
-              }
-            }
-
-            updateScore();
-            return;
-          }
-
-          let rng = Math.floor(Math.random() * keys.length);
-
-          let i = 0;
-          while (keys[rng].classList.contains("active")) {
-            rng = Math.floor(Math.random() * keys.length);
-            i++;
-            if (i >= keys.length) break;
-          }
-
-          keys[rng].classList.add("active");
-          totalActives++;
-        }, interval);
-
-        const handleKeyPress = (e) => {
-          playSound();
-
-          if (KEYBOARD.replace(" ", "").replace(" ", "").includes(e.key)) {
-            const target = document.querySelector(`#key_${e.key}`);
-            trials++;
-
-            if (target.classList.contains("active")) {
-              score++;
-              streak++;
-              hitted++;
-              totalActives--;
-              if (bestStreak < streak) bestStreak = streak;
-              target.classList.add("good");
-            } else {
-              score--;
-              missed++;
-              streak = 0;
-              target.classList.add("bad");
-              target.classList.add("active");
-            }
-
-            setTimeout(() => {
-              target.classList.remove("good");
-              target.classList.remove("bad");
-              target.classList.remove("active");
-            }, 100);
-
-            updateScore();
-          } else if (e.key === " ") {
-            endTimer = new Date().getTime();
-
-            document.removeEventListener("keypress", handleKeyPress);
-            clearInterval(game);
-
-            let accuracy = (hitted / trials) * 100;
-            if (trials <= 0) accuracy = 0;
-            accuracy = accuracy.toFixed(2);
-
-            const timeDiff = endTimer - startTimer;
-
-            summary.innerHTML = `
-<div>
-    <p><span>Score:</span><span>${score}</span></p>
-    <p><span>Best streak:</span><span>${bestStreak}</span></p>
-    <p><span>Accuracy:</span><span>${accuracy}%</span></p>
-    <p><span>Time:</span><span>${msToTime(timeDiff)}</span></p>
-</div>
-<div>
-    <p><span>Score:</span><span>${highscore}${score === highscore ? " - NEW BEST!" : ""}</span></p>
-    <p><span>Best streak:</span><span>${highestBestStreak}${bestStreak === highestBestStreak ? " - NEW BEST!" : ""}</span></p>
-</div>
-
-      `;
-            summary.classList.remove("hidden");
-          }
-        };
-
-        document.addEventListener("keypress", handleKeyPress);
-      }
-
-      function fadeOut(el) {
-        el.classList.add("fadeOut");
-      }
-
-      function displayHelp() {
-        help.innerHTML = "Press <span class='controlsKey--big'>F</span> and <span class='controlsKey--big'>J</span> to start";
-        const fKey = document.querySelector("#key_f");
-        const jKey = document.querySelector("#key_j");
-        fKey.classList.add("active");
-        jKey.classList.add("active");
-
-        let isFKey = true;
-        let isJKey = true;
-
-        const handlePress = (e) => {
-          if (e.key === "f") {
-            playSound();
-            fKey.classList.add("good");
-            isFKey = false;
-
-            setTimeout(() => {
-              fKey.classList.remove("good");
-              fKey.classList.remove("active");
-            }, 100);
-          } else if (e.key === "j") {
-            playSound();
-            jKey.classList.add("good");
-            isJKey = false;
-
-            setTimeout(() => {
-              jKey.classList.remove("good");
-              jKey.classList.remove("active");
-            }, 100);
-          }
-
-          if (!isFKey && isJKey) {
-            help.innerHTML = "Press <span class='controlsKey--big'>J</span> to start";
-          } else if (isFKey && !isJKey) {
-            help.innerHTML = "Press <span class='controlsKey--big'>F</span> to start";
-          }
-
-          if (!isFKey && !isJKey) {
-            document.removeEventListener("keypress", handlePress);
-            document.body.appendChild(controls);
-            document.querySelector(".score").classList.remove("hidden");
-
-            if (difficultyLevel !== "easy") fadeOut(diffLvlEasy);
-            if (difficultyLevel !== "medium") fadeOut(diffLvlMedium);
-            if (difficultyLevel !== "hard") fadeOut(diffLvlHard);
-            document.querySelector(`#difficultyLevel__${difficultyLevel}`).style.cursor = "default";
-            document.querySelector(`#difficultyLevel__${difficultyLevel}`).style.borderRadius = "8px";
-            diffLvlEl.style.backgroundColor = "transparent";
-            diffIndicator.style.backgroundColor = "transparent";
-            if (difficultyLevel === "easy") {
-              diffLvlEasy.style.transform = "translateX(89px)";
-            } else if (difficultyLevel === "hard") {
-              diffLvlHard.style.transform = "translateX(-89px)";
-            }
-            diffIndicator.style.transform = "translateX(89px)";
-
-            help.textContent = "3";
-
-            setTimeout(() => {
-              help.textContent = "2";
-
-              setTimeout(() => {
-                help.textContent = "1";
-
-                setTimeout(() => {
-                  help.textContent = "GO!";
-
-                  setTimeout(() => {
-                    help.textContent = "";
-                    start();
-                  }, 500);
-                }, 1000);
-              }, 1000);
-            }, 1000);
-          }
-        };
-
-        document.addEventListener("keypress", handlePress);
-      }
-
-      function init() {
-        KEYBOARD.split(" ").forEach((row) => {
-          const el = document.createElement("div");
-          el.classList.add("row");
-
-          row.split("").forEach((letter) => {
-            const key = document.createElement("span");
-            key.classList.add("key");
-            key.setAttribute("id", `key_${letter}`);
-            key.textContent = letter;
-
-            el.appendChild(key);
-          });
-
-          keyboard.appendChild(el);
-        });
-
-        displayHelp();
-      }
-      init();
-    </script>
+    <!-- <div id="multiplayer" class="multiplayer hidden">
+      <div id="multiplayer__scoreboard" class="multiplayer__scoreboard"></div>
+      <div id="multiplayer__screens" class="multiplayer__screens"></div>
+    </div> -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.3.0/firebase-app.js"></script> -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.3.0/firebase-database.js"></script> -->
+    <!-- <script src="firebase.js"></script> -->
+    <!-- <script src="assets.js"></script> -->
+    <script src="app.js"></script>
+    <!-- <script src="multiplayer.js"></script> -->
   </body>
 </html>
